@@ -1,6 +1,6 @@
 #include"utils.h"
 
-void getAllFiles(string path, vector<string>& files)
+void getAllFiles(string path, vector<string>& files)   ///windows系统里遍历文件夹里的全部文件和目录, 如果在linux系统里，需要修改函数里的代码
 {
 	intptr_t hFile = 0;//文件句柄  64位下long 改为 intptr_t
 	struct _finddata_t fileinfo;//文件信息 

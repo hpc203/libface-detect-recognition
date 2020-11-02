@@ -6,7 +6,7 @@ int main()
 	const bool align = false;   ////是否做人脸对齐
 	const Rec_thresh rec_threh = { 0.5,"cos" };  ////"cos" 或者 "euclid"
 
-	const string imgpath = "你的图片路径, 请修改";
+	const string imgpath = "你的图片路径, 请修改";   /// 路径分隔符是/
 	const string fileroot = "你的文件夹路径, 请修改";  ////这个文件夹里包含多个子文件夹, 每个子文件夹的名字是人名, 子文件夹里包含这个人的人脸图片, 图片是肖像照, 里面只有一个人脸
 	const char* bin_name = "你想保存的bin文件名, 请修改";
 

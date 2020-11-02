@@ -9,7 +9,7 @@ using namespace std;
 /*这个文件夹里包含多个子文件夹, 每个子文件夹的名字是人名. 
 子文件夹里包含这个人的人脸图片, 
 图片是肖像照, 里面只有一个人脸*/
-void getAllFiles(string path, vector<string>& files);
+void getAllFiles(string path, vector<string>& files);  ///windows系统里遍历文件夹里的全部文件和目录
 
 inline int MinInt(int a, int b)    //返回整数a和b中较小的一个
 {
@@ -23,7 +23,7 @@ inline int MaxInt(int a, int b)    //返回整数a和b中较大的一个
 
 inline string fromPath_Getname(string filepath)
 {
-	size_t pos_end = filepath.rfind("/");    ////倒数第1个路径间隔符
+	size_t pos_end = filepath.rfind("/");    ////倒数第1个路径间隔符， 路径分隔符是/
 	size_t pos_start = filepath.substr(0, pos_end).rfind("/");   ////倒数第2个路径间隔符
 	return filepath.substr(pos_start + 1, pos_end - pos_start - 1);
 }
