@@ -1,31 +1,88 @@
 #include"utils.h"
 
-void getAllFiles(string path, vector<string>& files)   ///windowsÏµÍ³Àï±éÀúÎÄ¼ş¼ĞÀïµÄÈ«²¿ÎÄ¼şºÍÄ¿Â¼, Èç¹ûÔÚlinuxÏµÍ³Àï£¬ĞèÒªĞŞ¸Äº¯ÊıÀïµÄ´úÂë
+void getAllFiles(string path, vector<string>& files)   ///windowsç³»ç»Ÿé‡Œéå†æ–‡ä»¶å¤¹é‡Œçš„å…¨éƒ¨æ–‡ä»¶å’Œç›®å½•, å¦‚æœåœ¨ubuntuç³»ç»Ÿé‡Œï¼Œéœ€è¦å±è”½è¿™æ®µä»£ç 
 {
-	intptr_t hFile = 0;//ÎÄ¼ş¾ä±ú  64Î»ÏÂlong ¸ÄÎª intptr_t
-	struct _finddata_t fileinfo;//ÎÄ¼şĞÅÏ¢ 
+	intptr_t hFile = 0;//æ–‡ä»¶å¥æŸ„  64ä½ä¸‹long æ”¹ä¸º intptr_t
+	struct _finddata_t fileinfo;//æ–‡ä»¶ä¿¡æ¯ 
 	string p;
-	if ((hFile = _findfirst(p.assign(path).append("/*").c_str(), &fileinfo)) != -1) //ÎÄ¼ş´æÔÚ
+	if ((hFile = _findfirst(p.assign(path).append("/*").c_str(), &fileinfo)) != -1) //æ–‡ä»¶å­˜åœ¨
 	{
 		do
 		{
-			if ((fileinfo.attrib & _A_SUBDIR))//ÅĞ¶ÏÊÇ·ñÎªÎÄ¼ş¼Ğ
+			if ((fileinfo.attrib & _A_SUBDIR))//åˆ¤æ–­æ˜¯å¦ä¸ºæ–‡ä»¶å¤¹
 			{
-				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)//ÎÄ¼ş¼ĞÃûÖĞ²»º¬"."ºÍ".."
+				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)//æ–‡ä»¶å¤¹åä¸­ä¸å«"."å’Œ".."
 				{
-					//files.push_back(p.assign(path).append("/").append(fileinfo.name)); //±£´æÎÄ¼ş¼ĞÃû
-					getAllFiles(p.assign(path).append("/").append(fileinfo.name), files); //µİ¹é±éÀúÎÄ¼ş¼ĞÀïµÄÎÄ¼ş
+					//files.push_back(p.assign(path).append("/").append(fileinfo.name)); //ä¿å­˜æ–‡ä»¶å¤¹å
+					getAllFiles(p.assign(path).append("/").append(fileinfo.name), files); //é€’å½’éå†æ–‡ä»¶å¤¹é‡Œçš„æ–‡ä»¶
 				}
 			}
 			else
 			{
-				files.push_back(p.assign(path).append("/").append(fileinfo.name));//Èç¹û²»ÊÇÎÄ¼ş¼Ğ£¬´¢´æÎÄ¼şÃû
+				files.push_back(p.assign(path).append("/").append(fileinfo.name));//å¦‚æœä¸æ˜¯æ–‡ä»¶å¤¹ï¼Œå‚¨å­˜æ–‡ä»¶å
 			}
 		} while (_findnext(hFile, &fileinfo) == 0);
 		_findclose(hFile);
 	}
 }
 
+/*   ///ubuntuç³»ç»Ÿé‡Œéå†æ–‡ä»¶å¤¹é‡Œçš„å…¨éƒ¨æ–‡ä»¶å’Œç›®å½•, å¦‚æœåœ¨windowsç³»ç»Ÿé‡Œï¼Œéœ€è¦å±è”½è¿™æ®µä»£ç 
+void getAllFiles_u( const char * dir_name, vector<string>& files )
+{
+    // check the parameter !
+    if( NULL == dir_name )
+    {
+        cout<<" dir_name is null ! "<<endl;
+        return;
+    }
+
+    // check if dir_name is a valid dir
+    struct stat s;
+//    lstat( dir_name , &s );
+//    if( ! S_ISDIR( s.st_mode ) )
+//    {
+//        cout<<dir_name<<" is not a valid directory !"<<endl;
+//        return;
+//    }
+
+    struct dirent * filename;    // return value for readdir()
+    DIR * dir;                   // return value for opendir()
+    dir = opendir( dir_name );
+//    if( NULL == dir )
+//    {
+//        cout<<"Can not open dir "<<dir_name<<endl;
+//        return;
+//    }
+//    cout<<"Successfully opened the dir !"<<endl;
+
+    /// read all the files in the dir ~
+    chdir(dir_name);
+    while( ( filename = readdir(dir) ) != NULL )
+    {
+        lstat(filename->d_name, &s);   // è·å–ä¸‹ä¸€çº§æˆå‘˜å±æ€§
+        if(S_ISDIR(s.st_mode))  // åˆ¤æ–­ä¸‹ä¸€çº§æˆå‘˜æ˜¯å¦æ˜¯ç›®å½•
+        {
+            // get rid of "." and ".."
+            if( strcmp( filename->d_name , "." ) != 0 && strcmp( filename->d_name , "..") != 0)
+            {
+                char* abspath = new char[strlen(dir_name) + strlen(filename->d_name)+1];
+                sprintf(abspath, "%s/%s", dir_name, filename->d_name);
+                getAllFiles(abspath, files);
+                delete [] abspath;
+            }
+        }
+        else
+        {
+            string filepath = dir_name;
+            filepath.append("/").append(filename->d_name);
+            files.push_back(filepath);
+        }
+    }
+    chdir( ".. ");
+    closedir(dir);
+}
+*/
+	
 int write_face_feature_name2bin(int num_face, int len_feature, const float* output, const vector<string> names, const char* bin_name)
 {
 	FILE* fp = fopen(bin_name, "wb");
@@ -36,7 +93,7 @@ int write_face_feature_name2bin(int num_face, int len_feature, const float* outp
 	{
 		int len_s = names[i].length();
 		fwrite(&len_s, sizeof(int), 1, fp);
-		fwrite(names[i].c_str(), sizeof(char), len_s + 1, fp);   ///×Ö·û´®Ä©Î²'\0'Ò²ËãÒ»¸ö×Ö·ûµÄ
+		fwrite(names[i].c_str(), sizeof(char), len_s + 1, fp);   ///å­—ç¬¦ä¸²æœ«å°¾'\0'ä¹Ÿç®—ä¸€ä¸ªå­—ç¬¦çš„
 	}
 	fclose(fp);
 	return 0;
@@ -49,23 +106,23 @@ float* read_face_feature_name2bin(int* num_face, int* len_feature, vector<string
 	fread(len_feature, sizeof(int), 1, fp);
 	int len = (*num_face) * (*len_feature);
 	float* output = new float[len];
-	fread(output, sizeof(float), len, fp);//µ¼ÈëÊı¾İ
+	fread(output, sizeof(float), len, fp);//å¯¼å…¥æ•°æ®
 	for (int i = 0; i < *num_face; i++)
 	{
 		int len_s = 0;
 		fread(&len_s, sizeof(int), 1, fp);
-		char* name = new char[len_s + 1];   ///×Ö·û´®Ä©Î²'\0'Ò²ËãÒ»¸ö×Ö·ûµÄ
-		fread(name, sizeof(char), len_s + 1, fp);//µ¼ÈëÊı¾İ
+		char* name = new char[len_s + 1];   ///å­—ç¬¦ä¸²æœ«å°¾'\0'ä¹Ÿç®—ä¸€ä¸ªå­—ç¬¦çš„
+		fread(name, sizeof(char), len_s + 1, fp);//å¯¼å…¥æ•°æ®
 		//cout << name << endl;
 		names.push_back(name);
 		delete[] name;
 	}
 
-	fclose(fp);//¹Ø±ÕÎÄ¼ş¡£
+	fclose(fp);//å…³é—­æ–‡ä»¶ã€‚
 	return output;
 }
 
-int Get_Min_Euclid_Dist(float* face_features, vector<float> out_feature, int num_face, int len_feature, float* dist_feature) ////Å·¼¸ÀïµÃ¾àÀëÖµÔ½Ğ¡,Á½¸öÏòÁ¿Ô½ÏàËÆ
+int Get_Min_Euclid_Dist(float* face_features, vector<float> out_feature, int num_face, int len_feature, float* dist_feature) ////æ¬§å‡ é‡Œå¾—è·ç¦»å€¼è¶Šå°,ä¸¤ä¸ªå‘é‡è¶Šç›¸ä¼¼
 {
 	int i = 0, j = 0, min_ind = 0;
 	float euclid_dist = 0, square = 0, min_dist = 10000;
@@ -88,14 +145,14 @@ int Get_Min_Euclid_Dist(float* face_features, vector<float> out_feature, int num
 	return min_ind;
 }
 
-/*ÓàÏÒ¾àÀëÖµÔ½´ó,Á½¸öÏòÁ¿Ô½ÏàËÆ
-* ¶¨ÒåÏòÁ¿aºÍÏòÁ¿b
-ÓàÏÒÖµcos(theta) = (a * b) / (|a| * |b|)
-|a|ºÍ|b|±íÊ¾ÏòÁ¿aºÍÏòÁ¿bµÄÄ£
-ÔÚ¼ÆËãÓàÏÒÖµÖ®Ç°£¬ÒÑ¾­¶ÔÏòÁ¿×öÁËµ¥Î»¹éÒ»»¯£¬Òò´Ë|a| = |b| = 1
-ÄÇÃ´cos(theta) = (a * b)
+/*ä½™å¼¦è·ç¦»å€¼è¶Šå¤§,ä¸¤ä¸ªå‘é‡è¶Šç›¸ä¼¼
+* å®šä¹‰å‘é‡aå’Œå‘é‡b
+ä½™å¼¦å€¼cos(theta) = (a * b) / (|a| * |b|)
+|a|å’Œ|b|è¡¨ç¤ºå‘é‡aå’Œå‘é‡bçš„æ¨¡
+åœ¨è®¡ç®—ä½™å¼¦å€¼ä¹‹å‰ï¼Œå·²ç»å¯¹å‘é‡åšäº†å•ä½å½’ä¸€åŒ–ï¼Œå› æ­¤|a| = |b| = 1
+é‚£ä¹ˆcos(theta) = (a * b)
 */
-int Get_Max_Cos_Dist(float* face_features, vector<float> out_feature, int num_face, int len_feature, float* dist_feature)   ////ÓàÏÒ¾àÀëÖµÔ½´ó,Á½¸öÏòÁ¿Ô½ÏàËÆ
+int Get_Max_Cos_Dist(float* face_features, vector<float> out_feature, int num_face, int len_feature, float* dist_feature)   ////ä½™å¼¦è·ç¦»å€¼è¶Šå¤§,ä¸¤ä¸ªå‘é‡è¶Šç›¸ä¼¼
 {
 	int i = 0, j = 0, max_ind = 0;
 	float cos_dist = 0, max_dist = -10000;
