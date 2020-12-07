@@ -5,32 +5,37 @@
 #include <string.h>
 #include<fstream>
 
-using namespace std;
-/*Õâ¸öÎÄ¼ş¼ĞÀï°üº¬¶à¸ö×ÓÎÄ¼ş¼Ğ, Ã¿¸ö×ÓÎÄ¼ş¼ĞµÄÃû×ÖÊÇÈËÃû. 
-×ÓÎÄ¼ş¼ĞÀï°üº¬Õâ¸öÈËµÄÈËÁ³Í¼Æ¬, 
-Í¼Æ¬ÊÇĞ¤ÏñÕÕ, ÀïÃæÖ»ÓĞÒ»¸öÈËÁ³*/
-void getAllFiles(string path, vector<string>& files);  ///windowsÏµÍ³Àï±éÀúÎÄ¼ş¼ĞÀïµÄÈ«²¿ÎÄ¼şºÍÄ¿Â¼
+//#include <unistd.h>  ///ubuntuç³»ç»Ÿé‡Œéå†æ–‡ä»¶å¤¹å‡½æ•°éœ€è¦ç”¨åˆ°çš„å¤´æ–‡ä»¶
+//#include <dirent.h> ///ubuntuç³»ç»Ÿé‡Œéå†æ–‡ä»¶å¤¹å‡½æ•°éœ€è¦ç”¨åˆ°çš„å¤´æ–‡ä»¶
+//#include <sys/stat.h> ///ubuntuç³»ç»Ÿé‡Œéå†æ–‡ä»¶å¤¹å‡½æ•°éœ€è¦ç”¨åˆ°çš„å¤´æ–‡ä»¶
 
-inline int MinInt(int a, int b)    //·µ»ØÕûÊıaºÍbÖĞ½ÏĞ¡µÄÒ»¸ö
+using namespace std;
+/*è¿™ä¸ªæ–‡ä»¶å¤¹é‡ŒåŒ…å«å¤šä¸ªå­æ–‡ä»¶å¤¹, æ¯ä¸ªå­æ–‡ä»¶å¤¹çš„åå­—æ˜¯äººå. 
+å­æ–‡ä»¶å¤¹é‡ŒåŒ…å«è¿™ä¸ªäººçš„äººè„¸å›¾ç‰‡, 
+å›¾ç‰‡æ˜¯è‚–åƒç…§, é‡Œé¢åªæœ‰ä¸€ä¸ªäººè„¸*/
+void getAllFiles(string path, vector<string>& files);  ///windowsç³»ç»Ÿé‡Œéå†æ–‡ä»¶å¤¹é‡Œçš„å…¨éƒ¨æ–‡ä»¶å’Œç›®å½•
+void getAllFiles_u(const char * dir_name, vector<string>& files); ///ubuntuç³»ç»Ÿé‡Œéå†æ–‡ä»¶å¤¹é‡Œçš„å…¨éƒ¨æ–‡ä»¶å’Œç›®å½•
+
+inline int MinInt(int a, int b)    //è¿”å›æ•´æ•°aå’Œbä¸­è¾ƒå°çš„ä¸€ä¸ª
 {
 	return (a < b) * a + (1 - (a < b)) * b;
 }
 
-inline int MaxInt(int a, int b)    //·µ»ØÕûÊıaºÍbÖĞ½Ï´óµÄÒ»¸ö
+inline int MaxInt(int a, int b)    //è¿”å›æ•´æ•°aå’Œbä¸­è¾ƒå¤§çš„ä¸€ä¸ª
 {
 	return (a > b) * a + (1 - (a > b)) * b;
 }
 
 inline string fromPath_Getname(string filepath)
 {
-	size_t pos_end = filepath.rfind("/");    ////µ¹ÊıµÚ1¸öÂ·¾¶¼ä¸ô·û£¬ Â·¾¶·Ö¸ô·ûÊÇ/
-	size_t pos_start = filepath.substr(0, pos_end).rfind("/");   ////µ¹ÊıµÚ2¸öÂ·¾¶¼ä¸ô·û
+	size_t pos_end = filepath.rfind("/");    ////å€’æ•°ç¬¬1ä¸ªè·¯å¾„é—´éš”ç¬¦ï¼Œ è·¯å¾„åˆ†éš”ç¬¦æ˜¯/
+	size_t pos_start = filepath.substr(0, pos_end).rfind("/");   ////å€’æ•°ç¬¬2ä¸ªè·¯å¾„é—´éš”ç¬¦
 	return filepath.substr(pos_start + 1, pos_end - pos_start - 1);
 }
 
 inline string fromPath_Get_imgname(string filepath)
 {
-	size_t pos_end = filepath.rfind("/");    ////µ¹ÊıµÚ1¸öÂ·¾¶¼ä¸ô·û
+	size_t pos_end = filepath.rfind("/");    ////å€’æ•°ç¬¬1ä¸ªè·¯å¾„é—´éš”ç¬¦
 	return filepath.substr(pos_end + 1);
 }
 
