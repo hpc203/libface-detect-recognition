@@ -17,7 +17,7 @@ using namespace std;
 子文件夹里包含这个人的人脸图片, 
 图片是肖像照, 里面只有一个人脸*/
 void getAllFiles(string path, vector<string>& files);  ///windows系统里遍历文件夹里的全部文件和目录
-//void getAllFiles(const char * dir_name, vector<string>& files); ///ubuntu系统里遍历文件夹里的全部文件和目录
+//void getAllFiles(string path, vector<string>& files); ///ubuntu系统里遍历文件夹里的全部文件和目录
 
 inline int MinInt(int a, int b)    //返回整数a和b中较小的一个
 {
