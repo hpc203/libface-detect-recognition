@@ -1,13 +1,16 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <vector>
-#include <io.h>
+#include <io.h> ///windows系统里遍历文件夹函数需要用到的头文件,如果在ubuntu系统运行程序，需要屏蔽这行代码
 #include <iostream>
 #include <string.h>
 #include<fstream>
 
-//#include <unistd.h>  ///ubuntu系统里遍历文件夹函数需要用到的头文件
-//#include <dirent.h> ///ubuntu系统里遍历文件夹函数需要用到的头文件
-//#include <sys/stat.h> ///ubuntu系统里遍历文件夹函数需要用到的头文件
+//ubuntu系统里遍历文件夹函数需要用到的头文件,如果在ubuntu系统运行程序，需要打开这段代码
+/*
+#include <unistd.h>
+#include <dirent.h>
+#include <sys/stat.h>
+*/
 
 using namespace std;
 /*这个文件夹里包含多个子文件夹, 每个子文件夹的名字是人名. 
