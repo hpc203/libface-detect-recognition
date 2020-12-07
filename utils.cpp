@@ -26,7 +26,8 @@ void getAllFiles(string path, vector<string>& files)   ///windows系统里遍历
 	}
 }
 
-/*   ///ubuntu系统里遍历文件夹里的全部文件和目录, 如果在windows系统里，需要屏蔽这段代码
+///ubuntu系统里遍历文件夹里的全部文件和目录, 如果在windows系统里，需要屏蔽这段代码
+/*
 void getAllFiles_u( const char * dir_name, vector<string>& files )
 {
     // check the parameter !
