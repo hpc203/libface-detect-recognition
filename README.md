@@ -1,6 +1,6 @@
 # 一种适合工业级应用的基于深度学习的实时人脸检测与识别算法的C++实现
 模型文件在百度网盘里，下载链接是
-链接: https://pan.baidu.com/s/1Cvw9925YhwsJosNB9fd5MQ 提取码: ev9g
+ https://pan.baidu.com/s/1Cvw9925YhwsJosNB9fd5MQ 提取码: ev9g
 
 下载完成后，把models文件夹与代码放在同一目录下，配置好opencv环境后就可以运行程序了。
 我这边用的是opencv4.4.0，建议安装这个最新版的opencv库，不然就可能在程序运行时出现异常中断的。
