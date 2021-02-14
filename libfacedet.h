@@ -53,29 +53,26 @@ class PriorBox
 
         int in_w;
         int in_h;
-        int out_w;
-        int out_h;
-
         vector<Size> feature_map_sizes;
         vector<BndBox_xywh> priors;
     private:
         vector<BndBox_xywh> generate_priors();
     public:
-        PriorBox(const Size& input_shape,
-            const Size& output_shape);
+        PriorBox(const int width);
         ~PriorBox();
-        vector<Face> decode(const Mat& loc, const Mat& conf);
+        vector<Face> decode(const Mat& loc, const Mat& conf, const Size output_shape);
 };
 
 class libface
 {
     public:
-        libface(bool align=false, string model_path = "models/YuFaceDetectNet_320.onnx")
+        libface(bool align=false, int width = 320) :pb(width)
         {
             this->align = align;
+			string modelpath = "models/YuFaceDetectNet_" + to_string(width) + ".onnx";  ///"_320.onnx"
+			this->model_path = modelpath;
             this->net = readNet(model_path);
-            this->model_path = model_path;
-            this->input_shape = get_input_shape(model_path);
+            this->input_shape = Size(width, int(0.75 * width));
         }
         vector<Face> detect(Mat img);
         Mat crop_face(Face det, Mat srcimg);
@@ -90,6 +87,7 @@ class libface
         const vector<String> output_names = { "loc", "conf" };
         Size get_input_shape(string model_fpath);
         Size input_shape;
+		PriorBox pb;
         void nms(vector<Face>& dets, const float thresh);
 };
 

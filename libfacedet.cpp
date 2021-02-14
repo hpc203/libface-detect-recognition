@@ -26,13 +26,11 @@ void Unit_Normalization(vector<float>& output)   //向量单位归一化
     }
 }
 
-PriorBox::PriorBox(const Size& input_shape,
-    const Size& output_shape) {
+PriorBox::PriorBox(const int width)
+{
     // initialize
-    in_w = input_shape.width;
-    in_h = input_shape.height;
-    out_w = output_shape.width;
-    out_h = output_shape.height;
+    in_w = width;
+    in_h = int(0.75 * width);
 
     Size feature_map_2nd = {
         int(int((in_w + 1) / 2) / 2), int(int((in_h + 1) / 2) / 2)
@@ -97,10 +95,11 @@ vector<BndBox_xywh> PriorBox::generate_priors() {
     return anchors;
 }
 
-vector<Face> PriorBox::decode(const Mat& loc,
-    const Mat& conf) {
+vector<Face> PriorBox::decode(const Mat& loc, const Mat& conf, const Size output_shape) 
+{
     vector<Face> dets; // num * [x1, y1, x2, y2, x_re, y_re, x_le, y_le, x_ml, y_ml, x_n, y_n, x_mr, y_ml]
-
+	const int out_w = output_shape.width;
+	const int out_h = output_shape.height;
     float* loc_v = (float*)(loc.data);
     float* conf_v = (float*)(conf.data);
     for (auto i = 0; i < priors.size(); ++i) {
@@ -202,7 +201,7 @@ vector<Face> libface::detect(Mat img)
     Size output_shape = img.size();
     Mat img_resize;
     resize(img, img_resize, input_shape);
-    Mat blob = blobFromImage(img_resize, 1.0, input_shape);
+    Mat blob = blobFromImage(img_resize);
 
     // Forward
     //vector<String> output_names = { "loc", "conf" };
@@ -211,8 +210,7 @@ vector<Face> libface::detect(Mat img)
     this->net.forward(output_blobs, this->output_names);
 
     // Decode bboxes, landmarks and scores
-    PriorBox pb(this->input_shape, output_shape);
-    vector<Face> dets = pb.decode(output_blobs[0], output_blobs[1]);
+    vector<Face> dets = this->pb.decode(output_blobs[0], output_blobs[1], output_shape);
 
     // Ignore low scores
     const float conf_thresh_ = this->conf_thresh;
