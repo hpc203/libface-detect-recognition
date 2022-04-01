@@ -19,3 +19,7 @@
 而这个函数在windows和linux里的代码实现是有所不同的。因此，如果你想在linux系统里运行人脸识别程序，那么需要按照代码里的注释说明去屏蔽一些代码打开另一些代码。
 在windows系统里，路径分隔符可以是"/"或者"\\"，在Linux系统里，路径分隔符是"/"，为了保证系统的兼容性，在本程序里，
 路径分隔符统一使用"/"
+
+这套程序里的人脸检测和人脸特征向量提取模块已经久远了，在2021年在11月6日，我在github发布了使用OpenCV部署libface人脸检测和SFace人脸识别，
+包含C++和Python两种版本的程序，仅仅只依赖OpenCV库就能运行。源码地址是：
+https://github.com/hpc203/libface-sface_detect-recognition-opencv
